@@ -1,8 +1,9 @@
-from multiprocessing import Process, Queue
+from multiprocessing import Queue
 from threading import Thread
 from itertools import count
 import serial
 import time
+import sys
 
 
 class SerialProcessor:
@@ -19,6 +20,7 @@ class SerialProcessor:
             print("Connected to: " + self.sr.portstr)
         except:
             print('Cannot reach this serial port')
+            sys.exit(0)
 
         try:
             print('Attempting to initialize reading thread')
@@ -47,14 +49,14 @@ class SerialProcessor:
         self.sr.reset_input_buffer()
         print('Reading Data')
         index = count()
-        startTime = time.time()
         self.sr.readline()
         while self.is_running:
             file = open(self.csvname + '.csv', 'a')
             # data_line = self.sr.readline().decode('utf-8')
             sr_bytes = self.sr.readline()
             decoded_bytes = sr_bytes[0:len(sr_bytes) - 2].decode('utf-8')
-            line = str(next(index)) + ', ' + str(time.time()) + ', ' + str(decoded_bytes)
+            record_time = time.time()
+            line = str(next(index)) + ', ' + str(record_time - record_time % 60) + ', ' + str(decoded_bytes)
 
             # if line looks like accelerometer data, add it to the queue. if not, just print it out.
             if len(decoded_bytes) > 4:
