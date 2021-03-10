@@ -1,4 +1,4 @@
-from multiprocessing import Process, Queue
+from multiprocessing import Queue
 from threading import Thread
 from itertools import count
 import serial
