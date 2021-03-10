@@ -3,6 +3,7 @@ from threading import Thread
 from itertools import count
 import serial
 import time
+import sys
 
 
 class SerialProcessor:
@@ -19,6 +20,7 @@ class SerialProcessor:
             print("Connected to: " + self.sr.portstr)
         except:
             print('Cannot reach this serial port')
+            sys.exit(0)
 
         try:
             print('Attempting to initialize reading thread')
