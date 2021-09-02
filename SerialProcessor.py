@@ -2,6 +2,7 @@ from multiprocessing import Queue
 from threading import Thread
 from itertools import count
 import serial
+import json
 import time
 import sys
 
@@ -56,10 +57,10 @@ class SerialProcessor:
             sr_bytes = self.sr.readline()
             decoded_bytes = sr_bytes[0:len(sr_bytes) - 2].decode('utf-8')
             record_time = time.time()
-            line = str(next(index)) + ', ' + str(record_time - record_time % 60) + ', ' + str(decoded_bytes)
+            line = str(record_time - record_time % 60) + ', ' + str(decoded_bytes)
 
             # if line looks like accelerometer data, add it to the queue. if not, just print it out.
-            if len(decoded_bytes) > 4:
+            if len(decoded_bytes) > 1:
                 self.queue.put(str(decoded_bytes))
                 file.write( line +'\n')
             else:
