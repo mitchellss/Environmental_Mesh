@@ -53,7 +53,8 @@ void loop(void)
       {
         // zero pad the address if necessary
         if (addrs[i][j] < 16) json+= "0" ;
-        json+= addrs[i][j];
+        json+= String(addrs[i][j], HEX);
+        //Serial.println(String(addrs[i][j], HEX));
       }
     json += "\"";
     /*
