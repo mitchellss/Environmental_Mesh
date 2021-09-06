@@ -20,6 +20,7 @@ DallasTemperature sensors(&oneWire);
 float strt_time;
 float curr_time;
 int device_count;
+String headers[] = { "test", "disc"};
 
 DeviceAddress addrs[MAX_SENSORS];
 
@@ -37,6 +38,8 @@ void setup(void)
 
 void loop(void)
 {
+  //Look for serial messages
+  getInput();
    
   strt_time = millis();
   sensors.requestTemperatures();// Send the command to get temperature readings
@@ -118,4 +121,24 @@ void discoverNetwork(){
 
   Serial.println("All Adresses Found");
 
+}
+
+void getInput() {
+  if (Serial.available() > 0) {
+    String msg = String(Serial.readString());
+    Serial.println(msg);
+    String key = msg.substring(1, 5);
+    int value = msg.substring(6).toInt();
+    Serial.println(key);
+    Serial.println(value);
+
+    if (key.length() > 0) {
+      if (key == headers[0]) {
+        Serial.print(key + ":   ");
+        Serial.println(value);
+      } else if (key == headers[1]) {
+        discoverNetwork();
+      }
+    }
+  }
 }
